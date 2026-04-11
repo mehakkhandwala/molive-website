@@ -3,6 +3,7 @@ import Hero from './components/Hero'
 import ProcessBanner from './components/ProcessBanner'
 import ProductSection from './components/ProductSection'
 import PickupSection from './components/PickupSection'
+import AboutSection from './components/AboutSection'
 import Footer from './components/Footer'
 
 export default function App() {
@@ -14,6 +15,7 @@ export default function App() {
         <ProcessBanner />
         <ProductSection />
         <PickupSection />
+        <AboutSection />
       </main>
       <Footer />
     </div>

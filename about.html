@@ -22,57 +22,35 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* ── HERO — full-width photo with overlay ─── */
+    /* ── HERO — solid dark olive, no image ──────── */
     .hero {
-      position: relative;
       width: 100%;
-      height: clamp(480px, 70vh, 820px);
-      overflow: hidden;
-      background: #2c2416;
-    }
-    .hero img {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center 55%;
-      display: block;
-    }
-    .hero-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        to bottom,
-        rgba(0,0,0,0.06) 0%,
-        rgba(0,0,0,0.18) 50%,
-        rgba(0,0,0,0.58) 100%
-      );
+      height: 300px;
+      background: #3a4020;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
     }
     .hero-content {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      text-align: center;
-      padding: 0 24px 52px;
+      padding: 0 24px;
     }
     .hero-title {
       font-family: 'Playfair Display', Georgia, serif;
-      font-size: clamp(36px, 6vw, 80px);
+      font-size: clamp(36px, 6vw, 72px);
       font-weight: 700;
       color: #fff;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
       line-height: 1;
-      margin-bottom: 14px;
+      margin-bottom: 16px;
     }
     .hero-sub {
       font-family: 'Lato', sans-serif;
       font-style: italic;
       font-weight: 300;
-      font-size: clamp(14px, 1.5vw, 18px);
-      color: rgba(255,255,255,0.75);
+      font-size: clamp(13px, 1.4vw, 16px);
+      color: rgba(255,255,255,0.65);
     }
 
     /* ── SECTION 1 — TWO COLUMN STORY ──────────── */
@@ -328,8 +306,6 @@
 
   <!-- ── HERO ──────────────────────────────────── -->
   <section class="hero">
-    <img src="./cake stand.png" alt="Molive olive oil cake" />
-    <div class="hero-overlay"></div>
     <div class="hero-content">
       <h1 class="hero-title">Our Story</h1>
       <p class="hero-sub">Made with love, olive oil, and a little bit of magic.</p>

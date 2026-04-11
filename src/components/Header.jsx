@@ -1,20 +1,10 @@
 import { useState } from 'react'
 
-const LEFT = [
-  { label: 'OUR CAKE', id: 'hero'  },
-  { label: 'SIZES',    id: 'sizes' },
-  { label: 'ORDER',    id: 'sizes' },
-]
-const RIGHT = [
-  { label: 'PICKUP INFO', id: 'footer' },
-  { label: 'CONTACT',     id: 'footer' },
-]
-
 export default function Header() {
   const [open, setOpen] = useState(false)
 
-  const scroll = (id) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+  const scrollToAbout = () => {
+    document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })
     setOpen(false)
   }
 
@@ -22,34 +12,18 @@ export default function Header() {
     <>
       {/* Desktop */}
       <header className="site-header">
-        <nav className="header-nav">
-          {LEFT.map(l => (
-            <button key={l.label} className="nav-btn" onClick={() => scroll(l.id)}>
-              {l.label}
-            </button>
-          ))}
-        </nav>
+        <div />
 
         <div className="header-logo-wrap">
           <img
             src="/images/Molive logo resized 1.svg"
             alt="Molive Bakery"
-            onClick={() => scroll('hero')}
+            onClick={() => document.getElementById('hero')?.scrollIntoView({ behavior: 'smooth' })}
           />
         </div>
 
         <nav className="header-nav right">
-          {RIGHT.map(l => (
-            <button key={l.label} className="nav-btn" onClick={() => scroll(l.id)}>
-              {l.label}
-            </button>
-          ))}
-          <a className="nav-btn" href="/about.html" target="_blank" rel="noopener noreferrer">
-            ABOUT
-          </a>
-          <a className="nav-btn" href="/origin.html" target="_blank" rel="noopener noreferrer">
-            THE ORIGIN
-          </a>
+          <button className="nav-btn" onClick={scrollToAbout}>ABOUT</button>
         </nav>
       </header>
 
@@ -62,24 +36,14 @@ export default function Header() {
           src="/images/Molive logo resized 1.svg"
           alt="Molive Bakery"
           style={{ height: '34px', filter: 'drop-shadow(0 1px 5px rgba(0,0,0,0.45))' }}
-          onClick={() => scroll('hero')}
+          onClick={() => document.getElementById('hero')?.scrollIntoView({ behavior: 'smooth' })}
         />
         <div style={{ width: '30px' }} />
       </header>
 
       {open && (
         <div className="mobile-nav-drawer">
-          {[...LEFT, ...RIGHT].map(l => (
-            <button key={l.label} className="nav-btn" onClick={() => scroll(l.id)}>
-              {l.label}
-            </button>
-          ))}
-          <a className="nav-btn" href="/about.html" target="_blank" rel="noopener noreferrer">
-            ABOUT
-          </a>
-          <a className="nav-btn" href="/origin.html" target="_blank" rel="noopener noreferrer">
-            THE ORIGIN
-          </a>
+          <button className="nav-btn" onClick={scrollToAbout}>ABOUT</button>
         </div>
       )}
     </>
