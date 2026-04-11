@@ -10,7 +10,7 @@ export const PRODUCTS = [
   },
   {
     id: 2,
-    src:    '/images/6in cake .png',
+    src:    '/images/6in cake.jpg',
     pos:    'center center',
     title:  '6-INCH SMALL CAKE',
     price:  '$20.00',
@@ -19,7 +19,7 @@ export const PRODUCTS = [
   },
   {
     id: 3,
-    src:    '/images/9in cake.png',
+    src:    '/images/9in cake.jpg',
     pos:    'center 25%',
     title:  '9-INCH LARGE CAKE',
     price:  '$30.00',
