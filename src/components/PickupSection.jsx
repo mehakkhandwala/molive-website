@@ -102,7 +102,20 @@ export default function PickupSection() {
                          customer.email.trim() && customer.phone.trim()
   const ready = selectedDate && selectedTime && cartItems.length > 0 && customerFilled
 
+  // Debug: log what's blocking the button whenever dependencies change
+  console.log('[Checkout readiness]', {
+    selectedDate,
+    selectedTime,
+    cartCount: cartItems.length,
+    firstName:  customer.firstName.trim() || '(empty)',
+    lastName:   customer.lastName.trim()  || '(empty)',
+    email:      customer.email.trim()     || '(empty)',
+    phone:      customer.phone.trim()     || '(empty)',
+    ready,
+  })
+
   async function handleCheckout() {
+    console.log('[handleCheckout] called — ready:', ready, '| submitting:', submitting)
     if (submitting || !ready) return
     setSubmitting(true)
     setCheckoutError(null)
@@ -115,27 +128,41 @@ export default function PickupSection() {
       customer,
     }))
 
+    const payload = {
+      items: cartItems,
+      pickupDate: selectedDate,
+      pickupTime: selectedTime,
+      customer,
+    }
+    console.log('[handleCheckout] POSTing to /api/create-checkout-session:', payload)
+
     try {
       const res = await fetch('/api/create-checkout-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          items: cartItems,
-          pickupDate: selectedDate,
-          pickupTime: selectedTime,
-          customer,
-        }),
+        body: JSON.stringify(payload),
       })
 
-      const data = await res.json()
+      console.log('[handleCheckout] response status:', res.status)
+
+      let data
+      try {
+        data = await res.json()
+      } catch {
+        throw new Error(`Server returned a non-JSON response (status ${res.status}). Make sure you are running "vercel dev" instead of "npm run dev" so the API route is available.`)
+      }
+
+      console.log('[handleCheckout] response body:', data)
 
       if (!res.ok) {
         throw new Error(data.error || 'Something went wrong. Please try again.')
       }
 
+      console.log('[handleCheckout] redirecting to Stripe:', data.url)
       // Redirect to Stripe Checkout — quantities are locked (no adjustable_quantity set)
       window.location.href = data.url
     } catch (err) {
+      console.error('[handleCheckout] error:', err.message)
       setCheckoutError(err.message)
       setSubmitting(false)
     }
