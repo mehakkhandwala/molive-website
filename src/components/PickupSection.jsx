@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useCart } from '../context/CartContext'
 
 const TIME_SLOTS = [
@@ -22,7 +22,7 @@ function isPickupAvailable(year, month, day) {
   today.setHours(0, 0, 0, 0)
   const target = new Date(year, month, day)
   const daysDiff = Math.floor((target - today) / 86_400_000)
-  const dow = target.getDay() // 0 = Sun, 6 = Sat
+  const dow = target.getDay()
   return (dow === 0 || dow === 6) && daysDiff >= 2
 }
 
@@ -35,11 +35,36 @@ function formatDate(key) {
 
 export default function PickupSection() {
   const now = new Date()
-  const [viewYear, setViewYear]     = useState(now.getFullYear())
-  const [viewMonth, setViewMonth]   = useState(now.getMonth())
+  const [viewYear, setViewYear]         = useState(now.getFullYear())
+  const [viewMonth, setViewMonth]       = useState(now.getMonth())
   const [selectedDate, setSelectedDate] = useState(null)
   const [selectedTime, setSelectedTime] = useState(null)
-  const { items, total } = useCart()
+  const [customer, setCustomer]         = useState({ firstName: '', lastName: '', email: '', phone: '' })
+  const [submitting, setSubmitting]     = useState(false)
+  const [checkoutError, setCheckoutError] = useState(null)
+  const [showCancelBanner, setShowCancelBanner] = useState(false)
+
+  const { items, total, restoreCart } = useCart()
+
+  // Restore state when returning from a cancelled Stripe session
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('canceled') !== 'true') return
+
+    setShowCancelBanner(true)
+
+    const saved = sessionStorage.getItem('molive_pending_order')
+    if (saved) {
+      const { cartItems: savedItems, selectedDate: d, selectedTime: t, customer: c } = JSON.parse(saved)
+      if (d) setSelectedDate(d)
+      if (t) setSelectedTime(t)
+      if (c) setCustomer(c)
+      if (savedItems?.length) restoreCart(savedItems)
+    }
+
+    // Clean ?canceled=true from the URL without a page reload
+    window.history.replaceState({}, '', '/#order')
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   function prevMonth() {
     if (viewMonth === 0) { setViewYear(y => y - 1); setViewMonth(11) }
@@ -50,8 +75,7 @@ export default function PickupSection() {
     else setViewMonth(m => m + 1)
   }
 
-  // Build calendar cell array
-  const firstDow   = new Date(viewYear, viewMonth, 1).getDay()
+  const firstDow    = new Date(viewYear, viewMonth, 1).getDay()
   const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate()
   const cells = [
     ...Array(firstDow).fill(null),
@@ -68,26 +92,74 @@ export default function PickupSection() {
     setSelectedTime(null)
   }
 
-  const [customer, setCustomer] = useState({ firstName: '', lastName: '', email: '', phone: '' })
-
   function handleCustomer(e) {
     const { name, value } = e.target
     setCustomer(prev => ({ ...prev, [name]: value }))
   }
 
-  const cartItems = Object.values(items)
+  const cartItems      = Object.values(items)
   const customerFilled = customer.firstName.trim() && customer.lastName.trim() &&
-    customer.email.trim() && customer.phone.trim()
+                         customer.email.trim() && customer.phone.trim()
   const ready = selectedDate && selectedTime && cartItems.length > 0 && customerFilled
 
+  async function handleCheckout() {
+    if (submitting || !ready) return
+    setSubmitting(true)
+    setCheckoutError(null)
+
+    // Persist order state so we can restore it if the customer cancels on Stripe
+    sessionStorage.setItem('molive_pending_order', JSON.stringify({
+      cartItems,
+      selectedDate,
+      selectedTime,
+      customer,
+    }))
+
+    try {
+      const res = await fetch('/api/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: cartItems,
+          pickupDate: selectedDate,
+          pickupTime: selectedTime,
+          customer,
+        }),
+      })
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Something went wrong. Please try again.')
+      }
+
+      // Redirect to Stripe Checkout — quantities are locked (no adjustable_quantity set)
+      window.location.href = data.url
+    } catch (err) {
+      setCheckoutError(err.message)
+      setSubmitting(false)
+    }
+  }
+
   return (
-    <section className="pickup-section">
+    <section id="order" className="pickup-section">
       <div className="pickup-inner">
         <h2 className="pickup-heading">Schedule Your Pickup</h2>
 
+        {showCancelBanner && (
+          <div className="cancel-banner" role="alert">
+            <span>Your payment was not completed. Your selections have been restored — review and try again.</span>
+            <button
+              className="cancel-banner-close"
+              onClick={() => setShowCancelBanner(false)}
+              aria-label="Dismiss"
+            >×</button>
+          </div>
+        )}
+
         <div className="pickup-layout">
 
-          {/* ── Left column: calendar + time slots ── */}
+          {/* ── Left: calendar + time slots ── */}
           <div className="pickup-left">
 
             <div className="cal-card">
@@ -101,7 +173,6 @@ export default function PickupSection() {
                 {DAY_LABELS.map(d => (
                   <div key={d} className="cal-day-name">{d}</div>
                 ))}
-
                 {cells.map((day, i) => {
                   if (!day) return <div key={`blank-${i}`} className="cal-day-blank" />
                   const key       = dateKey(viewYear, viewMonth, day)
@@ -113,9 +184,9 @@ export default function PickupSection() {
                       key={key}
                       className={[
                         'cal-day',
-                        available  ? 'cal-day--open'     : 'cal-day--blocked',
-                        selected   ? 'cal-day--selected' : '',
-                        isToday    ? 'cal-day--today'    : '',
+                        available ? 'cal-day--open'     : 'cal-day--blocked',
+                        selected  ? 'cal-day--selected' : '',
+                        isToday   ? 'cal-day--today'    : '',
                       ].filter(Boolean).join(' ')}
                       onClick={() => handleDayClick(day)}
                       disabled={!available}
@@ -153,7 +224,7 @@ export default function PickupSection() {
             )}
           </div>
 
-          {/* ── Right column: order summary ── */}
+          {/* ── Right: order summary ── */}
           <div className="summary-card">
             <h3 className="summary-heading">Order Summary</h3>
 
@@ -195,7 +266,7 @@ export default function PickupSection() {
               <div className="summary-field">
                 <span className="summary-field-label">Time slot</span>
                 <span className="summary-field-value">
-                  {selectedTime ? selectedTime : <em>Not selected</em>}
+                  {selectedTime || <em>Not selected</em>}
                 </span>
               </div>
             </div>
@@ -252,8 +323,16 @@ export default function PickupSection() {
               </label>
             </div>
 
-            <button className="summary-confirm-btn" disabled={!ready}>
-              {ready ? 'Confirm Order' : 'Complete your selection'}
+            {checkoutError && (
+              <p className="checkout-error" role="alert">{checkoutError}</p>
+            )}
+
+            <button
+              className="summary-confirm-btn"
+              disabled={!ready || submitting}
+              onClick={handleCheckout}
+            >
+              {submitting ? 'Redirecting to payment…' : ready ? 'Confirm Order' : 'Complete your selection'}
             </button>
           </div>
 

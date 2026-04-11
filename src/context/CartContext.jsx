@@ -36,8 +36,14 @@ export function CartProvider({ children }) {
 
   const cartCount = Object.values(items).reduce((sum, item) => sum + item.qty, 0)
 
+  function restoreCart(savedItems) {
+    const restored = {}
+    savedItems.forEach(item => { restored[item.id] = item })
+    setItems(restored)
+  }
+
   return (
-    <CartContext.Provider value={{ items, setQty, addToCart, total, cartCount }}>
+    <CartContext.Provider value={{ items, setQty, addToCart, restoreCart, total, cartCount }}>
       {children}
     </CartContext.Provider>
   )

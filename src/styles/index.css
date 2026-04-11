@@ -684,6 +684,189 @@ main {
   cursor: not-allowed;
 }
 
+/* ── Cancel banner ── */
+.cancel-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: #fdf3ec;
+  border: 1px solid #e8b48a;
+  border-radius: 6px;
+  padding: 12px 16px;
+  margin-bottom: 28px;
+  font-family: 'Lato', sans-serif;
+  font-size: 13px;
+  color: #7a3b10;
+}
+.cancel-banner-close {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #b06030;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 2px;
+  flex-shrink: 0;
+}
+.cancel-banner-close:hover { color: #7a3b10; }
+
+/* ── Checkout error ── */
+.checkout-error {
+  font-family: 'Lato', sans-serif;
+  font-size: 12px;
+  color: #c0392b;
+  margin: 12px 0 0 0;
+  padding: 8px 12px;
+  background: #fdf0ef;
+  border: 1px solid #f0b8b3;
+  border-radius: 4px;
+}
+
+/* ── Order confirmation page ── */
+.conf-page {
+  min-height: 100vh;
+  background: #f4f1e8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 16px;
+}
+.conf-card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.10), 0 1px 4px rgba(0,0,0,0.06);
+  padding: 48px 40px;
+  width: 100%;
+  max-width: 520px;
+}
+.conf-icon {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: #d4edda;
+  color: #2e7d32;
+  font-size: 26px;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 20px;
+  font-weight: 700;
+}
+.conf-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 26px; font-weight: 600;
+  color: #2C2416;
+  text-align: center;
+  margin: 0 0 8px 0;
+}
+.conf-sub {
+  font-family: 'Lato', sans-serif;
+  font-size: 14px;
+  color: #78624A;
+  text-align: center;
+  margin: 0 0 4px 0;
+}
+.conf-rule {
+  border: none;
+  border-top: 1px solid #E8E2D6;
+  margin: 20px 0;
+}
+.conf-section { }
+.conf-section-heading {
+  font-family: 'Lato', sans-serif;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #9C8060;
+  margin: 0 0 12px 0;
+}
+.conf-detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+.conf-detail-label {
+  font-family: 'Lato', sans-serif;
+  font-size: 12px;
+  color: #9C8060;
+}
+.conf-detail-value {
+  font-family: 'Lato', sans-serif;
+  font-size: 13px; font-weight: 600;
+  color: #2C2416;
+  text-align: right;
+}
+.conf-items {
+  list-style: none;
+  margin: 0 0 12px 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.conf-item {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 8px;
+  align-items: baseline;
+}
+.conf-item-name {
+  font-family: 'Lato', sans-serif;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #2C2416;
+}
+.conf-item-meta {
+  font-family: 'Lato', sans-serif;
+  font-size: 12px;
+  color: #9C8060;
+}
+.conf-item-price {
+  font-family: 'Lato', sans-serif;
+  font-size: 12px; font-weight: 700;
+  color: #2C2416;
+}
+.conf-total-row {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'Lato', sans-serif;
+  font-size: 13px; font-weight: 700;
+  color: #2C2416;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding-top: 10px;
+  border-top: 1px solid #E8E2D6;
+}
+.conf-email-note {
+  font-family: 'Lato', sans-serif;
+  font-size: 12px;
+  color: #9C8060;
+  text-align: center;
+  margin: 0 0 4px 0;
+}
+.conf-home-btn {
+  display: block;
+  margin-top: 24px;
+  width: 100%;
+  height: 42px;
+  line-height: 42px;
+  text-align: center;
+  background: #D4773A;
+  color: #fff;
+  font-family: 'Lato', sans-serif;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+.conf-home-btn:hover { background: #be6830; }
+@media (max-width: 560px) {
+  .conf-card { padding: 32px 20px; }
+}
+
 /* ── Customer form ── */
 .customer-form {
   display: flex;
