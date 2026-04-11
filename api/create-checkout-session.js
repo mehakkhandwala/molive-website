@@ -36,6 +36,9 @@ export default async function handler(req, res) {
       line_items,
       mode: 'payment',
       customer_email: customer.email,
+      payment_intent_data: {
+        receipt_email: customer.email,
+      },
       success_url: `${origin}/order-confirmation?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url:   `${origin}/?canceled=true#order`,
       metadata: {
