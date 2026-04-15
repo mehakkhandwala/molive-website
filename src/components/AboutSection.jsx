@@ -27,7 +27,7 @@ export default function AboutSection() {
       {/* Wave */}
       <div className="about-wave-top" aria-hidden="true">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 64" preserveAspectRatio="none">
-          <path fill="#5c6e30" d="M0,32 C320,64 800,0 1440,40 L1440,64 L0,64 Z"/>
+          <path fill="#7a8a4a" d="M0,32 C320,64 800,0 1440,40 L1440,64 L0,64 Z"/>
         </svg>
       </div>
 

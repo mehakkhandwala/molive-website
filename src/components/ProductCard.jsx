@@ -3,7 +3,12 @@ import { useCart } from '../context/CartContext'
 
 export default function ProductCard({ id, src, pos, title, price, serves, desc }) {
   const [qty, setQtyLocal] = useState(1)
-  const { addToCart } = useCart()
+  const { addToCart, items } = useCart()
+  const inCart = Boolean(items[id])
+
+  function handleAddToCart() {
+    addToCart({ id, title, price, pendingQty: qty })
+  }
 
   return (
     <div className="card">
@@ -34,8 +39,8 @@ export default function ProductCard({ id, src, pos, title, price, serves, desc }
           </div>
           <button
             className="add-btn"
-            onClick={() => addToCart({ id, title, price, pendingQty: qty })}
-          >ADD TO CART</button>
+            onClick={handleAddToCart}
+          >{inCart ? '✓ Added to cart' : 'ADD TO CART'}</button>
         </div>
       </div>
     </div>

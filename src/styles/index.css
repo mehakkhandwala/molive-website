@@ -176,8 +176,8 @@ main {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
-  gap: 120px;
+  justify-content: space-evenly;
+  width: 100%;
 }
 .process-item {
   display: flex;
@@ -212,11 +212,7 @@ main {
 }
 .process-num { }
 .process-connector { display: none; }
-@media (max-width: 680px) {
-  .process-steps { gap: 40px; }
-}
 @media (max-width: 400px) {
-  .process-steps { gap: 20px; }
   .process-icon { width: 48px; height: 48px; }
   .process-label { font-size: 9px; letter-spacing: 1px; }
 }
@@ -1038,7 +1034,7 @@ main {
 /* Trilogy */
 .about-trilogy {
   width: 100%;
-  background: #5c6e30;
+  background: #7a8a4a;
 }
 .about-trilogy-grid {
   display: grid;
