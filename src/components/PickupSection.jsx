@@ -102,20 +102,7 @@ export default function PickupSection() {
                          customer.email.trim() && customer.phone.trim()
   const ready = selectedDate && selectedTime && cartItems.length > 0 && customerFilled
 
-  // Debug: log what's blocking the button whenever dependencies change
-  console.log('[Checkout readiness]', {
-    selectedDate,
-    selectedTime,
-    cartCount: cartItems.length,
-    firstName:  customer.firstName.trim() || '(empty)',
-    lastName:   customer.lastName.trim()  || '(empty)',
-    email:      customer.email.trim()     || '(empty)',
-    phone:      customer.phone.trim()     || '(empty)',
-    ready,
-  })
-
   async function handleCheckout() {
-    console.log('[handleCheckout] called — ready:', ready, '| submitting:', submitting)
     if (submitting || !ready) return
     setSubmitting(true)
     setCheckoutError(null)
@@ -128,22 +115,17 @@ export default function PickupSection() {
       customer,
     }))
 
-    const payload = {
-      items: cartItems,
-      pickupDate: selectedDate,
-      pickupTime: selectedTime,
-      customer,
-    }
-    console.log('[handleCheckout] POSTing to /api/create-checkout-session:', payload)
-
     try {
       const res = await fetch('/api/create-checkout-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({
+          items: cartItems,
+          pickupDate: selectedDate,
+          pickupTime: selectedTime,
+          customer,
+        }),
       })
-
-      console.log('[handleCheckout] response status:', res.status)
 
       let data
       try {
@@ -152,17 +134,12 @@ export default function PickupSection() {
         throw new Error(`Server returned a non-JSON response (status ${res.status}). Make sure you are running "vercel dev" instead of "npm run dev" so the API route is available.`)
       }
 
-      console.log('[handleCheckout] response body:', data)
-
       if (!res.ok) {
         throw new Error(data.error || 'Something went wrong. Please try again.')
       }
 
-      console.log('[handleCheckout] redirecting to Stripe:', data.url)
-      // Redirect to Stripe Checkout — quantities are locked (no adjustable_quantity set)
       window.location.href = data.url
     } catch (err) {
-      console.error('[handleCheckout] error:', err.message)
       setCheckoutError(err.message)
       setSubmitting(false)
     }
@@ -183,6 +160,31 @@ export default function PickupSection() {
             >×</button>
           </div>
         )}
+
+        {/* ── Pickup info banner ── */}
+        <div className="pickup-info-banner">
+          <div className="pickup-info-item">
+            <svg className="pickup-info-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M12 21c-4.418-4.418-7-7.582-7-10.5a7 7 0 0 1 14 0c0 2.918-2.582 6.082-7 10.5z"/>
+              <circle cx="12" cy="10.5" r="2.5"/>
+            </svg>
+            <div>
+              <span className="pickup-info-label">Pickup Location</span>
+              <span className="pickup-info-value">Harvest Green Clubhouse<br/>3400 Harvest Corner Dr, Richmond, TX 77406</span>
+            </div>
+          </div>
+          <div className="pickup-info-divider" aria-hidden="true" />
+          <div className="pickup-info-item">
+            <svg className="pickup-info-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="9"/>
+              <polyline points="12 7 12 12 15.5 15.5"/>
+            </svg>
+            <div>
+              <span className="pickup-info-label">Pickup Hours</span>
+              <span className="pickup-info-value">Saturday &amp; Sunday<br/>10:00am – 2:00pm</span>
+            </div>
+          </div>
+        </div>
 
         <div className="pickup-layout">
 

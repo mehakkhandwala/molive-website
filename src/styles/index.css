@@ -301,7 +301,7 @@ main {
   font-family: 'Lato', sans-serif;
   font-size: 13px;
   font-weight: 700;
-  color: #2C2416;
+  color: #a04040;
   flex-shrink: 0;
 }
 .card-serves {
@@ -428,7 +428,64 @@ main {
   text-transform: uppercase;
   color: #2C2416;
   text-align: center;
+  margin: 0 0 32px 0;
+}
+
+/* ── Pickup info banner ── */
+.pickup-info-banner {
+  display: flex;
+  align-items: stretch;
+  background: #3a4020;
+  border-radius: 8px;
   margin: 0 0 40px 0;
+  overflow: hidden;
+}
+.pickup-info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  flex: 1;
+  padding: 22px 28px;
+}
+.pickup-info-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  color: #a6c2c6;
+  margin-top: 2px;
+}
+.pickup-info-label {
+  display: block;
+  font-family: 'Lato', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #a6c2c6;
+  margin-bottom: 6px;
+}
+.pickup-info-value {
+  display: block;
+  font-family: 'Lato', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: #f4f1e8;
+}
+.pickup-info-divider {
+  width: 1px;
+  background: rgba(255,255,255,0.12);
+  margin: 18px 0;
+}
+@media (max-width: 640px) {
+  .pickup-info-banner {
+    flex-direction: column;
+  }
+  .pickup-info-divider {
+    width: auto;
+    height: 1px;
+    margin: 0 18px;
+  }
 }
 .pickup-layout {
   display: grid;
@@ -515,7 +572,7 @@ main {
   color: #fff !important;
 }
 .cal-day--today:not(.cal-day--selected) {
-  outline: 2px solid #98b9be;
+  outline: 2px solid #a04040;
   outline-offset: -2px;
 }
 .cal-note {
@@ -1002,6 +1059,8 @@ main {
   text-transform: uppercase;
   color: #7a8a4a;
   margin-bottom: 24px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(160, 64, 64, 0.3);
 }
 .about-body-p {
   font-family: 'Lato', sans-serif;
